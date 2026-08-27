@@ -276,8 +276,8 @@ _require-harness-script script:
     script="{{script}}"
     if [[ ! -f "$script" ]]; then
       echo "error: $script is not included in this repository checkout." >&2
-      echo "Tracked harness scripts: scripts/runtime_smoke.sh, scripts/query_memory_profile.sh, scripts/ci_local.sh" >&2
-      echo "See https://github.com/hydra-db/hydradb/issues/88 for status." >&2
+      echo "Available harnesses on a clean checkout: smoke, smoke-graphblas, query-memory-profile." >&2
+      echo "See DEVELOPMENT.md and https://github.com/hydra-db/hydradb/issues/88 for status." >&2
       exit 1
     fi
 
@@ -293,7 +293,7 @@ verify-harness-scripts:
         echo "MISSING $script"
         missing=$((missing + 1))
       fi
-    done < <(grep -oE 'scripts/[A-Za-z0-9_.-]+\.sh' justfile | sort -u)
+    done < <(grep -E 'bash scripts/|_require-harness-script scripts/' justfile | grep -oE 'scripts/[A-Za-z0-9_.-]+\.sh' | sort -u)
     if [[ "$missing" -gt 0 ]]; then
       echo "$missing harness script(s) are not tracked; see https://github.com/hydra-db/hydradb/issues/88" >&2
       exit 1
